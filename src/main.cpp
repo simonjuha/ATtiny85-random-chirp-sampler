@@ -1,4 +1,9 @@
-// ATtiny85 grain player
+/*
+    ATtiny85 Random Chirp Sample Player
+    SimonJuhl.net
+    2024
+*/
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -470,15 +475,11 @@ void playSampleFromPosition(uint16_t startPosition, uint16_t endPosition) {
     resetRingBuffer();
 }
 
-uint16_t map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uint16_t out_max) {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
 // This is the interrupt service routine for Timer0 compare match A
 // The purpose of this ISR is to output the samples from the ringbuffer to the PWM
 ISR(TIMER0_COMPA_vect) {    
-    if (ringCount) {                             //If entry in FIFO
-      OCR1A = ringbuffer[(ringRead++)];          //Output 8-bit DAC
+    if (ringCount) {                             // If entry in FIFO
+      OCR1A = ringbuffer[(ringRead++)];          // Output 8-bit DAC
       ringCount--; // decrement ringbuffer count
     }
 }
